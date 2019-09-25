@@ -22,8 +22,13 @@ class Building
       Building.new(hash)
     end 
   end
-  def self.create # for create
-    response = HTTP.post("http://localhost:3000/api/buildings")
-    response.parse
+  def self.create(input_options) # for create
+    response = HTTP.post("http://localhost:3000/api/buildings",
+                    form: input_options
+                        )
+    input_options = response.parse
+    input_options.map do |option|
+      Building.new(hash)
+    end
   end
 end

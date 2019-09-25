@@ -9,33 +9,16 @@ class Client::BuildingsController < ApplicationController
   end
 
   def create
+    @building = Building.create(
+           name: params[:name],
+           address: params[:address],
+           height: params[:height],
+           construction_date: params[:construction_date],
+           architect: params[:architect]
+                                )
 
-    response = HTTP.post(
-                         "http://localhost:3000/api/buildings", 
-                            form:{
-                             name: params[:name],
-                             address: params[:address],
-                             height: params[:height],
-                             construction_date: params[:construction_date],
-                             architect: params[:architect]
-                              }
-                              )
-
-    @building = response.parse
-    redirect_to "/client/buildings/#{@building['id']}"
+    redirect_to "/client/buildings/#{@building.id}"
   end
-
-  # def create
-  #   @building = Building.create(
-  #          name: params[:name],
-  #          address: params[:address],
-  #          height: params[:height],
-  #          construction_date: params[:construction_date],
-  #          architect: params[:architect]
-  #                               )
-
-  #   redirect_to "/client/buildings/#{@building.id}"
-  # end
 
   def show
     @building = Building.find(params[:id])
@@ -43,23 +26,35 @@ class Client::BuildingsController < ApplicationController
   end
 
   def edit
-    response = HTTP.get("http://localhost:3000/api/buildings/#{params[:id]}")
-    @building = response.parse
+    @building = Building.find(params[:id])
     render "edit.html.erb"
   end
 
+  # def update
+  #   response = HTTP.patch(
+  #                         "http://localhost:3000/api/buildings/#{params[:id]}", 
+  #                         form:{
+  #                         name: params[:name],
+  #                         address: params[:address],
+  #                         height: params[:height],
+  #                         construction_date: params[:construction_date],
+  #                         architect: params[:architect]
+  #                   })
+  #   @building = response.parse
+  #   redirect_to "/client/buildings/#{@building['id']}"
+  # end
+
   def update
-    response = HTTP.patch(
-                          "http://localhost:3000/api/buildings/#{params[:id]}", 
-                          form:{
-                          name: params[:name],
-                          address: params[:address],
-                          height: params[:height],
-                          construction_date: params[:construction_date],
-                          architect: params[:architect]
-                    })
-    @building = response.parse
-    redirect_to "/client/buildings/#{@building['id']}"
+    @building = Building.find(params[:id])
+    @building.update(
+                     name: params[:name],
+                     address: params[:address],
+                     height: params[:height],
+                     construction_date: params[:construction_date],
+                     architect: params[:architect]
+                    )
+
+    redirect_to "/client/buildings/#{@building.id}"
   end
 
   def destroy
